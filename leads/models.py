@@ -11,7 +11,7 @@ class Agent(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.email
+        return self.user.username
 
 
 class Lead(models.Model):
