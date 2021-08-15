@@ -22,5 +22,3 @@ class Lead(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-# start video from 1:45:28
