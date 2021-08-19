@@ -1,12 +1,29 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.generic import TemplateView, ListView
 from .models import Agent, Lead
 from .forms import LeadForm, LeadModelForm
 
 
-def landing_page(request):
-    return render(request, 'landing.html')
-# starts from 3:38:23
+# CRUD+L - Create, Retrieve, Update and Delete + List view
+# Start from 3:41:44
+
+# -----landing page Class based view's-------
+class LandingPageView(TemplateView):
+    template_name = 'landing.html'
+
+# ----Function based view's
+# def landing_page(request):
+#     return render(request, 'landing.html')
+
+
+# -----Geniric List View -------
+class LeadListView(ListView):
+    template_name = "leads/lead_list.html"
+    queryset = Lead.objects.all()
+    context_object_name = "leads"
+
+# ----Function List View--------
 
 
 def lead_list(request):
