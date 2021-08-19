@@ -1,15 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
-from django.views.generic import TemplateView, ListView
+from django.views import generic
 from .models import Agent, Lead
 from .forms import LeadForm, LeadModelForm
 
 
 # CRUD+L - Create, Retrieve, Update and Delete + List view
-# Start from 3:41:44
+# Start from 3:54:31
 
 # -----landing page Class based view's-------
-class LandingPageView(TemplateView):
+class LandingPageView(generic.TemplateView):
     template_name = 'landing.html'
 
 # ----Function based view's
@@ -17,8 +17,8 @@ class LandingPageView(TemplateView):
 #     return render(request, 'landing.html')
 
 
-# -----Geniric List View -------
-class LeadListView(ListView):
+# -----Generic List View -------
+class LeadListView(generic.ListView):
     template_name = "leads/lead_list.html"
     queryset = Lead.objects.all()
     context_object_name = "leads"
@@ -31,6 +31,16 @@ def lead_list(request):
     context = {'leads': leads}
     return render(request, "leads/lead_list.html", context)
 
+# ------ Generic Detail View--------
+
+
+class LeadDetailView(generic.DetailView):
+    template_name = "leads/lead_detail.html"
+    queryset = Lead.objects.all()
+    context_object_name = "lead"
+
+# ------Function Detail view--------
+
 
 def lead_detail(request, pk):
     lead = Lead.objects.get(id=pk)
@@ -41,6 +51,16 @@ def lead_detail(request, pk):
 
 
 # --------------------lead create with Model Form which reduce the amount of code------------------
+
+# -------generic Create View-------
+class LeadCreateView(generic.CreateView):
+    template_name = "leads/lead_create.html"
+    form_class = LeadModelForm
+
+    def get_success_url(self):
+        return reverse("leads:lead-list")
+
+# --------Function Lead Create view-------
 
 
 def lead_create(request):
@@ -58,6 +78,19 @@ def lead_create(request):
 
 # -------------------------lead update with Model Form-----------------------------
 
+# -------Generic Lead Update View------
+
+class LeadUpdateView(generic.UpdateView):
+    template_name = "leads/lead_update.html"
+    queryset = Lead.objects.all()
+    form_class = LeadModelForm
+
+    def get_success_url(self):
+        return reverse("leads:lead-list")
+
+# ----Function Lead Update view--------
+
+
 def lead_update(request, pk):
     lead = Lead.objects.get(id=pk)
     form = LeadModelForm(instance=lead)
@@ -72,6 +105,18 @@ def lead_update(request, pk):
         'lead': lead
     }
     return render(request, 'leads/lead_update.html', context)
+
+# ------generic Class based Delete view-------
+
+
+class LeadDeleteView(generic.DeleteView):
+    template_name = "leads/lead_delete.html"
+    queryset = Lead.objects.all()
+
+    def get_success_url(self):
+        return reverse("leads:lead-list")
+
+# ------Function based Delete View-------
 
 
 def lead_delete(request, pk):
