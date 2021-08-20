@@ -71,6 +71,7 @@ class LeadCreateView(generic.CreateView):
         )
         return super(LeadCreateView, self).form_valid(form)
 
+
 # --------Function Lead Create view-------
 
 
