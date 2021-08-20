@@ -7,7 +7,7 @@ from .forms import LeadForm, LeadModelForm
 
 
 # CRUD+L - Create, Retrieve, Update and Delete + List view
-# Start from 3:54:31
+# Start from 4:15:31
 
 # -----landing page Class based view's-------
 class LandingPageView(generic.TemplateView):
