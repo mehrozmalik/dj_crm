@@ -1,15 +1,24 @@
 from django.core.mail import message, send_mail
 from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.views import generic
 from .models import Agent, Lead
-from .forms import LeadForm, LeadModelForm
+from .forms import LeadForm, LeadModelForm, CustomUserCreationForm
 
 
 # CRUD+L - Create, Retrieve, Update and Delete + List view
 # Start from 4:15:31
+class SignupView(generic.CreateView):
+    template_name = "registration/signup.html"
+    form_class = CustomUserCreationForm
+
+    def get_success_url(self):
+        return reverse("login")
 
 # -----landing page Class based view's-------
+
+
 class LandingPageView(generic.TemplateView):
     template_name = 'landing.html'
 
@@ -19,7 +28,7 @@ class LandingPageView(generic.TemplateView):
 
 
 # -----Generic List View -------
-class LeadListView(generic.ListView):
+class LeadListView(LoginRequiredMixin, generic.ListView):
     template_name = "leads/lead_list.html"
     queryset = Lead.objects.all()
     context_object_name = "leads"
@@ -35,7 +44,7 @@ def lead_list(request):
 # ------ Generic Detail View--------
 
 
-class LeadDetailView(generic.DetailView):
+class LeadDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "leads/lead_detail.html"
     queryset = Lead.objects.all()
     context_object_name = "lead"
@@ -54,7 +63,7 @@ def lead_detail(request, pk):
 # --------------------lead create with Model Form which reduce the amount of code------------------
 
 # -------generic Create View-------
-class LeadCreateView(generic.CreateView):
+class LeadCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "leads/lead_create.html"
     form_class = LeadModelForm
 
@@ -92,7 +101,7 @@ def lead_create(request):
 
 # -------Generic Lead Update View------
 
-class LeadUpdateView(generic.UpdateView):
+class LeadUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = "leads/lead_update.html"
     queryset = Lead.objects.all()
     form_class = LeadModelForm
@@ -121,7 +130,7 @@ def lead_update(request, pk):
 # ------generic Class based Delete view-------
 
 
-class LeadDeleteView(generic.DeleteView):
+class LeadDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = "leads/lead_delete.html"
     queryset = Lead.objects.all()
 
